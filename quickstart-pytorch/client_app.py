@@ -20,11 +20,27 @@ def apply_gaussian_noise_attack(model: torch.nn.Module, noise_std: float = 1.0) 
             param.add_(noise)
 
 
-def apply_sign_flip_attack(model: torch.nn.Module, flip_factor: float = -1.0) -> None:
-    """Aplica o ataque de Sign Flip"""
+def apply_sign_flip_attack(
+    model: torch.nn.Module,
+    flip_factor: float = -1.0,
+    top_fraction: float = 0.2,
+) -> None:
+    """Aplica o ataque de Sign Flip.
+
+    Se top_fraction < 1.0, inverte o sinal apenas dos pesos com maior magnitude
+    (os top_fraction% mais impactantes de cada camada), em vez de todos os pesos.
+    """
     with torch.no_grad():
         for param in model.parameters():
-            param.mul_(flip_factor)
+            if top_fraction >= 1.0:
+                # Comportamento original: inverte todos os pesos
+                param.mul_(flip_factor)
+            else:
+                flat = param.data.view(-1)
+                k = max(1, int(flat.numel() * top_fraction))
+                # Seleciona os índices dos k maiores pesos em valor absoluto
+                _, top_indices = torch.topk(flat.abs(), k)
+                flat[top_indices] *= flip_factor
 
 
 @app.train()
@@ -63,7 +79,7 @@ def train(msg: Message, context: Context):
                 print(f"[ATTACK] Cliente {partition_id} aplicando ruído gaussiano")
                 apply_gaussian_noise_attack(model)
             case "flip":
-                print(f"[ATTACK] Cliente {partition_id} aplicando sign flip")
+                print(f"[ATTACK] Cliente {partition_id} aplicando sign flip ")
                 apply_sign_flip_attack(model)
         
 
