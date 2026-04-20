@@ -51,7 +51,7 @@ def apply_alie_attack(
             low = mu - z_max * sigma
             high = mu + z_max * sigma
             
-            # Cria um tensor novo zerado e seleciona aleatóriamente valores entre o intervalor low e high para preenche-lo
+            # Cria um tensor novo zerado e seleciona aleatóriamente valores entre o intervalo low e high para preenche-lo
             param.data = torch.empty_like(param.data).uniform_(low.item(), high.item())
 
 
