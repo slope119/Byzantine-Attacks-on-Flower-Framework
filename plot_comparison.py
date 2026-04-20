@@ -71,20 +71,18 @@ def plot_comparison(filepaths: list[str], output: str) -> None:
         ax1.plot(data["rounds"], data["accuracy"], marker="o", label=label, color=color)
         ax2.plot(data["rounds"], data["loss"], marker="o", label=label, color=color)
 
-    ax1.set_title("Acurácia Global", fontsize=14)
-    ax1.set_xlabel("Round", fontsize=13)
-    ax1.set_ylabel("Accuracy", fontsize=13)
+    ax1.set_xlabel("Rodada", fontsize=13)
+    ax1.set_ylabel("Acurácia", fontsize=13)
     ax1.legend()
     ax1.grid(True)
 
-    ax2.set_title("Loss Global", fontsize=14)
-    ax2.set_xlabel("Round", fontsize=13)
-    ax2.set_ylabel("Loss", fontsize=13)
+    ax2.set_xlabel("Rodada", fontsize=13)
+    ax2.set_ylabel("Perda", fontsize=13)
     ax2.legend()
     ax2.grid(True)
 
     plt.tight_layout()
-    plt.savefig(output, dpi=150)
+    plt.savefig(output, format="pdf")
     print(f"Gráfico de comparação salvo em {output}")
     plt.close(fig)
 
@@ -98,8 +96,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--output",
-        default="comparison.png",
-        help="Nome do arquivo de saída (padrão: comparison.png)",
+        default="comparison.pdf",
+        help="Nome do arquivo de saída (padrão: comparison.pdf)",
     )
     args = parser.parse_args()
 
