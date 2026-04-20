@@ -118,17 +118,12 @@ def train(msg: Message, context: Context):
                 print(f"[ATTACK] Cliente {partition_id} aplicando sign flip ")
                 apply_sign_flip_attack(model)
             case "alie":
-                z_max = context.run_config.get("alie-z-max", None)
-                print(
-                    f"[ATTACK] Cliente {partition_id} aplicando ALIE "
-                    f"(z_max={z_max if z_max is not None else 'auto'})"
-                )
+                print(f"[ATTACK] Cliente {partition_id} aplicando ALIE ")
                 apply_alie_attack(
                     model,
                     global_state_dict=global_state_dict,
                     num_clients=num_partitions,
                     num_malicious=num_malicious,
-                    z_max=z_max,
                 )
         
 
