@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from flwr.app import ArrayRecord, ConfigRecord, Context, MetricRecord
 from flwr.serverapp import Grid, ServerApp
-from flwr.serverapp.strategy import FedAvg
+from flwr.serverapp.strategy import FedAvg, MultiKrum
 
 from pytorchexample.task import Net, load_centralized_dataset, test
 
@@ -32,8 +32,8 @@ def main(grid: Grid, context: Context) -> None:
     arrays = ArrayRecord(global_model.state_dict())
 
     # Initialize FedAvg strategy
-    strategy = FedAvg(fraction_evaluate=fraction_evaluate)
-
+    #strategy = FedAvg(fraction_evaluate=fraction_evaluate)
+    strategy = MultiKrum(fraction_evaluate=fraction_evaluate, num_malicious_nodes=8)
     # Start strategy, run FedAvg for `num_rounds`
     result = strategy.start(
         grid=grid,

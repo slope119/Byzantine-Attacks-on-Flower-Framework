@@ -46,9 +46,13 @@ def apply_alie_attack(
             model.named_parameters(), global_state_dict.values()
         ):
             global_param = global_param.to(param.device)
-            mu = global_param
-            sigma = (param.data - global_param).abs()
-            param.data = mu + z_max * sigma
+            mu = global_param.mean()
+            sigma = (param.data - global_param).abs().mean()
+            low = mu - z_max * sigma
+            high = mu + z_max * sigma
+            
+            # Cria um tensor novo zerado e seleciona aleatóriamente valores entre o intervalor low e high para preenche-lo
+            param.data = torch.empty_like(param.data).uniform_(low.item(), high.item())
 
 
 def apply_sign_flip_attack(
